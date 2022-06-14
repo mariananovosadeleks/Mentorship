@@ -1,0 +1,11 @@
+	-k, --key            AES key to encrypt
+	
+	-d, --decrypt        (Default: false) Run in decryption mode.
+	
+	-p, --skip-format    (Default: false) Skip prism ecnryption format "******{text}******"
+	
+	--help               Display this help screen.
+	
+	--version            Display version information.
+	
+	value pos. 0         Required. Value to encrypt.
