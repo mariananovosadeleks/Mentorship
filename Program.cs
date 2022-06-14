@@ -16,54 +16,22 @@ namespace Mentorship
 
             Call(args);
 
-            //Get parameters string
-            var arg = @"-help -s C:\Users\mariana.novosad\source\repos\Mentorship\source -d C:\Users\mariana.novosad\source\repos\Mentorship\destination -f test.txt";
-            //string[] parameters = String.Join(" ", args).Split("-");
+            var arg = @"-help -s   C:\Users\mariana.novosad\source\repos\Mentorship\source -d C:\Users\mariana.novosad\source\repos\Mentorship\destination -f test.txt";
 
-            //Func<string, string> someFunctionDelegate = parameter => parameter + "1";
-            var parameters = arg.Split("-");
-            var param1 = parameters.Where(HasValue).Select(Method);
+            var parametersArray = arg.Split("-");
 
-            var param = param1.ToDictionary(GetKey, GetValue);
+            var param1 = parametersArray.Where(x => !String.IsNullOrWhiteSpace(x)).ToDictionary((x => x.Split(" ")[0]), GetValue);
 
 
-
-            //someFunctionDelegate.Invoke("text");
-            
-
-            Console.WriteLine("PARAMETERS:" + parameters);
+            Console.WriteLine("PARAMETERS:" + param1);
         }
 
-        public static bool HasValue(string keyValueStr)
+        public static string GetValue(string param)
         {
-           
+            var array = param.Split(" ");
+            var value = array.Length > 1 ? array[1] : string.Empty;
 
-            return !String.IsNullOrWhiteSpace(keyValueStr);
-        }
-
-        public static string GetKey(KeyValuePair<string,string> pair)
-        {
-            return pair.Key;
-        }
-
-        public static string GetValue(KeyValuePair<string, string> pair)
-        {
-            return pair.Value;
-        }
-
-        public static KeyValuePair<string, string> Method(string parameter)
-        {
-            var value = string.Empty;
-            var arr = parameter.Split(" ");
-            var key = arr[0];
-            if(arr.Length > 1)
-            {
-                value = arr[1];
-            }
-
-            var keyValue = new KeyValuePair<string, string>(key, value);
-
-            return keyValue;
+            return value;
         }
 
         private static readonly Dictionary<string, Action<string[]>> commandMap = new Dictionary<string, Action<string[]>>(StringComparer.InvariantCultureIgnoreCase)
@@ -78,26 +46,6 @@ namespace Mentorship
         };//шоб шо
 
 
-
-        public void  Parse (string[] args)
-        {
-            Dictionary<string, string> parsedParameters = new Dictionary<string, string>();
-            //string flag = "-";
-
-            //for(int i = 0; i < args.Length; i++)
-            //{
-            //    if (args[i] == null) continue;
-
-            //    string key = "";
-            //    string value = "";
-
-
-            //}
-
-
-
-
-        }
 
 
          static void Help(string[] args)
