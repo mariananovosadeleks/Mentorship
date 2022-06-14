@@ -15,15 +15,14 @@ namespace Mentorship
         {
 
             Call(args);
+            //only for testing
+            var fakeArg = @"-help -s C:\Users\mariana.novosad\source\repos\Mentorship\source -d C:\Users\mariana.novosad\source\repos\Mentorship\destination -f test.txt";
 
-            var arg = @"-help -s   C:\Users\mariana.novosad\source\repos\Mentorship\source -d C:\Users\mariana.novosad\source\repos\Mentorship\destination -f test.txt";
+            var fakeParameters = fakeArg.Split("-").Where(x => !String.IsNullOrWhiteSpace(x)).ToDictionary((x => x.Split(" ")[0]), GetValue);
+            //true data
+            var parameters = string.Join(" ", args).Split("-").Where(x => !String.IsNullOrWhiteSpace(x)).ToDictionary((x => x.Split(" ")[0]), GetValue);
 
-            var parametersArray = arg.Split("-");
-
-            var param1 = parametersArray.Where(x => !String.IsNullOrWhiteSpace(x)).ToDictionary((x => x.Split(" ")[0]), GetValue);
-
-
-            Console.WriteLine("PARAMETERS:" + param1);
+            Console.WriteLine("PARAMETERS:" + fakeParameters);
         }
 
         public static string GetValue(string param)
@@ -36,7 +35,7 @@ namespace Mentorship
 
         private static readonly Dictionary<string, Action<string[]>> commandMap = new Dictionary<string, Action<string[]>>(StringComparer.InvariantCultureIgnoreCase)
         {
-            [nameof(Help)] = Help,
+            //[nameof(Help)] = Help,
             [nameof(Key)] = Key,
             [nameof(Decrypt)] = Decrypt,
             [nameof(SkipFormat)] = SkipFormat,
@@ -48,15 +47,12 @@ namespace Mentorship
 
 
 
-         static void Help(string[] args)
+         static void Help()
          {
-            var files = File.ReadLines(@"C:\Users\mariana.novosad\source\repos\Mentorship\help.txt");
-            foreach(var f in files)
-            {
-                Console.WriteLine(f);
-            }
-            return;
+            var files = File.ReadAllText(@"C:\Users\mariana.novosad\source\repos\Mentorship\help.txt");
+            Console.WriteLine(files);
         }
+
 
         static void Move(string[] args)
         {
@@ -79,7 +75,7 @@ namespace Mentorship
             }
             else if (args.Length == 0 || args[0] == "-h")
             {
-                Help(args);
+                Help();
             }
             else if (args.Length == 0 || args[0] == "-v")
             {
