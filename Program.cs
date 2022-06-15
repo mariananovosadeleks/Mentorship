@@ -5,12 +5,53 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-
+using Mentorship.Models;
+using Mentorship.Models.Enums;
 
 namespace Mentorship
 {
     class Program
     {
+        public List<Parameter> parametersList = new List<Parameter>()
+        {
+            new Parameter
+            {
+                ShortName ="-h",
+                FullName = "--help",
+                Type = Keys.Help
+            },
+            new Parameter
+            {
+                ShortName = string.Empty,
+                FullName = string.Empty,
+                Type = Keys.IpDomainPort
+            },
+            new Parameter
+            {
+                ShortName = "=f",
+                FullName = "--file",
+                Type = Keys.FileName
+            },
+            new Parameter
+            {
+                ShortName = "-o",
+                FullName = "--output",
+                Type = Keys.Output
+            },
+            new Parameter
+            {
+                ShortName = "-p",
+                FullName = "--password",
+                Type = Keys.Password
+            },
+            new Parameter
+            {
+                ShortName = "-u",
+                FullName = "--user",
+                Type = Keys.User
+            }
+        };
+
         static void Main(string[] args)
         {
 
@@ -23,6 +64,8 @@ namespace Mentorship
             var parameters = string.Join(" ", args).Split("-").Where(x => !String.IsNullOrWhiteSpace(x)).ToDictionary((x => x.Split(" ")[0]), GetValue);
 
             Console.WriteLine("PARAMETERS:" + fakeParameters);
+
+
         }
 
         public static string GetValue(string param)
