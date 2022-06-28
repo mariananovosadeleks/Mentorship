@@ -27,9 +27,14 @@ namespace Mentorship
             Call(args);
             //only for testing
             var fakeArg = @"-help -s C:\Users\mariana.novosad\source\repos\Mentorship\source -d C:\Users\mariana.novosad\source\repos\Mentorship\destination -f test.txt";
-            var fakeParameters = fakeArg.Split("-").Where(x => !String.IsNullOrWhiteSpace(x)).ToDictionary((x => x.Split(" ")[0]), GetValue);
+            var fakeParameters = fakeArg.Split("-")
+                .Where(x => !String.IsNullOrWhiteSpace(x))
+                .ToDictionary((x => x.Split(" ")[0]), GetValue);
             //true data
-            var parameters = string.Join(" ", args).Split("-").Where(x => !String.IsNullOrWhiteSpace(x)).ToDictionary((x => x.Split(" ")[0]), GetValue);
+            var parameters = string.Join(" ", args)
+                .Split("-")
+                .Where(x => !String.IsNullOrWhiteSpace(x))
+                .ToDictionary((x => x.Split(" ")[0]), GetValue);
 
             Console.WriteLine("PARAMETERS:" + fakeParameters);
         }
@@ -41,13 +46,6 @@ namespace Mentorship
             return value;
         }
 
-        private static readonly Dictionary<string, Action<string[]>> commandMap = new Dictionary<string, Action<string[]>>(StringComparer.InvariantCultureIgnoreCase)
-        {
-            //[nameof(Help)] = Help,
-            [nameof(Version)] = Version,
-            [nameof(Move)] = Move
-        };//шоб шо
-    
          private static void Help()
          {
             var files = File.ReadAllText(@"C:\Users\mariana.novosad\source\repos\Mentorship\help.txt");
