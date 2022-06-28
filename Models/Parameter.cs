@@ -11,5 +11,13 @@ namespace Mentorship.Models
         public string FullName { get; set; }
         public Keys Type { get; set; }
 
+        public Parameter() { }
+
+        public Parameter(Keys type,  string shortName = "", string fullName = "")
+        {
+            ShortName = shortName;
+            FullName = fullName;
+            Type = type;
+        }
     }
 }

@@ -14,42 +14,12 @@ namespace Mentorship
     {
         public List<Parameter> parametersList = new List<Parameter>()
         {
-            new Parameter
-            {
-                ShortName ="-h",
-                FullName = "--help",
-                Type = Keys.Help
-            },
-            new Parameter
-            {
-                ShortName = string.Empty,
-                FullName = string.Empty,
-                Type = Keys.IpDomainPort
-            },
-            new Parameter
-            {
-                ShortName = "=f",
-                FullName = "--file",
-                Type = Keys.FileName
-            },
-            new Parameter
-            {
-                ShortName = "-o",
-                FullName = "--output",
-                Type = Keys.Output
-            },
-            new Parameter
-            {
-                ShortName = "-p",
-                FullName = "--password",
-                Type = Keys.Password
-            },
-            new Parameter
-            {
-                ShortName = "-u",
-                FullName = "--user",
-                Type = Keys.User
-            }
+           new Parameter(Keys.Help, "-h", "--help"),
+           new Parameter(Keys.IpDomainPort),
+           new Parameter(Keys.FileName, "-f", "--file"),
+           new Parameter(Keys.Output, "-o", "--output"),
+           new Parameter(Keys.Password,"-p", "--password"),
+           new Parameter(Keys.User, "-u", "--user")  
         };
 
         static void Main(string[] args)
@@ -79,15 +49,10 @@ namespace Mentorship
         private static readonly Dictionary<string, Action<string[]>> commandMap = new Dictionary<string, Action<string[]>>(StringComparer.InvariantCultureIgnoreCase)
         {
             //[nameof(Help)] = Help,
-            [nameof(Key)] = Key,
-            [nameof(Decrypt)] = Decrypt,
-            [nameof(SkipFormat)] = SkipFormat,
             [nameof(Version)] = Version,
             [nameof(Move)] = Move
 
         };//шоб шо
-
-
 
 
          static void Help()
@@ -130,20 +95,6 @@ namespace Mentorship
             }
         }
 
-        static void Key(string[] args)
-        {
-
-        }
-
-        static void Decrypt(string[] args)
-        {
-
-        }
-
-        static void SkipFormat(string[] args)
-        {
-
-        }
 
         static void Version(string[] args)
         {
