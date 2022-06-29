@@ -12,21 +12,22 @@ namespace Mentorship
 {
     class Program
     {
-        private List<Parameter> _parametersList = new List<Parameter>()
+        private static List<Parameter> _parametersList = new List<Parameter>()
         {
-           new Parameter(Keys.Help, "-h", "--help"),
+           new Parameter(Keys.Help, "h", "help"),
            new Parameter(Keys.IpDomainPort),
-           new Parameter(Keys.FileName, "-f", "--file"),
-           new Parameter(Keys.Output, "-o", "--output"),
-           new Parameter(Keys.Password,"-p", "--password"),
-           new Parameter(Keys.User, "-u", "--user")  
+           new Parameter(Keys.FileName, "f", "file"),
+           new Parameter(Keys.Output, "o", "output"),
+           new Parameter(Keys.Password,"p", "password"),
+           new Parameter(Keys.User, "u", "user")
         };
 
         static void Main(string[] args)
         {
-            Call(args);
+            //Call(args);
             //only for testing
-            var fakeArg = @"-help -s C:\Users\mariana.novosad\source\repos\Mentorship\source -d C:\Users\mariana.novosad\source\repos\Mentorship\destination -f test.txt";
+            //var fakeArg = @"-help -s C:\Users\mariana.novosad\source\repos\Mentorship\source -d C:\Users\mariana.novosad\source\repos\Mentorship\destination -f test.txt";
+            var fakeArg = @"--help -f C:\Users\mariana.novosad\source\repos\Mentorship\source -o C:\Users\mariana.novosad\source\repos\Mentorship\destination -u test.txt";
             var fakeParameters = fakeArg.Split("-")
                 .Where(x => !String.IsNullOrWhiteSpace(x))
                 .ToDictionary((x => x.Split(" ")[0]), GetValue);
@@ -35,6 +36,8 @@ namespace Mentorship
                 .Split("-")
                 .Where(x => !String.IsNullOrWhiteSpace(x))
                 .ToDictionary((x => x.Split(" ")[0]), GetValue);
+
+            Console.WriteLine(IsValid(fakeParameters));
 
             Console.WriteLine("PARAMETERS:" + fakeParameters);
         }
@@ -46,11 +49,23 @@ namespace Mentorship
             return value;
         }
 
-         private static void Help()
-         {
+        private static bool IsValid(Dictionary<string, string> parameters)
+        {
+
+            if (parameters == null)
+            {
+                return false;
+            }
+
+            return parameters.Keys
+                .Any(i => _parametersList
+                        .Any(y => y.FullName == i || y.ShortName == i));
+        }
+        private static void Help()
+        {
             var files = File.ReadAllText(@"C:\Users\mariana.novosad\source\repos\Mentorship\help.txt");
             Console.WriteLine(files);
-         }
+        }
 
         private static void Move(string[] args)
         {
@@ -79,7 +94,7 @@ namespace Mentorship
             {
                 Version(args);
             }
-            else 
+            else
             {
                 Console.WriteLine("shit");
             }
@@ -91,5 +106,7 @@ namespace Mentorship
             Console.WriteLine("version: " + version);
             return;
         }
+
+
     }
 }
