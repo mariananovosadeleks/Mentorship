@@ -27,7 +27,7 @@ namespace Mentorship
             //Call(args);
             //only for testing
             //var fakeArg = @"-help -s C:\Users\mariana.novosad\source\repos\Mentorship\source -d C:\Users\mariana.novosad\source\repos\Mentorship\destination -f test.txt";
-            var fakeArg = @"--help -f C:\Users\mariana.novosad\source\repos\Mentorship\source -o C:\Users\mariana.novosad\source\repos\Mentorship\destination -u test.txt";
+            var fakeArg = @"--help -p C:\Users\mariana.novosad\source\repos\Mentorship\source -o C:\Users\mariana.novosad\source\repos\Mentorship\destination -u test.txt";
             var fakeParameters = fakeArg.Split("-")
                 .Where(x => !String.IsNullOrWhiteSpace(x))
                 .ToDictionary((x => x.Split(" ")[0]), GetValue);
@@ -38,8 +38,6 @@ namespace Mentorship
                 .ToDictionary((x => x.Split(" ")[0]), GetValue);
 
             Console.WriteLine(IsValid(fakeParameters));
-
-            Console.WriteLine("PARAMETERS:" + fakeParameters);
         }
 
         private static string GetValue(string param)
@@ -58,8 +56,8 @@ namespace Mentorship
             }
 
             return parameters.Keys
-                .Any(i => _parametersList
-                        .Any(y => y.FullName == i || y.ShortName == i));
+               .All(i => _parametersList
+                       .Any(y => y.FullName == i || y.ShortName == i));
         }
         private static void Help()
         {
