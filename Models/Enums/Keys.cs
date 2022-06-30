@@ -11,6 +11,7 @@ namespace Mentorship.Models.Enums
         Help,
         Output,
         Password,
-        User
+        User,
+        Version
     }
 }

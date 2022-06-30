@@ -19,7 +19,8 @@ namespace Mentorship
            new Parameter(Keys.FileName, "f", "file"),
            new Parameter(Keys.Output, "o", "output"),
            new Parameter(Keys.Password,"p", "password"),
-           new Parameter(Keys.User, "u", "user")
+           new Parameter(Keys.User, "u", "user"),
+           new Parameter(Keys.Version, "v", "version")
         };
 
         static void Main(string[] args)
@@ -28,6 +29,7 @@ namespace Mentorship
             //only for testing
             //var fakeArg = @"-help -s C:\Users\mariana.novosad\source\repos\Mentorship\source -d C:\Users\mariana.novosad\source\repos\Mentorship\destination -f test.txt";
             var fakeArg = @"--help -p C:\Users\mariana.novosad\source\repos\Mentorship\source -o C:\Users\mariana.novosad\source\repos\Mentorship\destination -u test.txt";
+
             var fakeParameters = fakeArg.Split("-")
                 .Where(x => !String.IsNullOrWhiteSpace(x))
                 .ToDictionary((x => x.Split(" ")[0]), GetValue);
@@ -36,8 +38,38 @@ namespace Mentorship
                 .Split("-")
                 .Where(x => !String.IsNullOrWhiteSpace(x))
                 .ToDictionary((x => x.Split(" ")[0]), GetValue);
+            if (!IsValid(fakeParameters))
+            {
+                Help();
+                return;
+            }
 
-            Console.WriteLine(IsValid(fakeParameters));
+            foreach (var p in fakeParameters)
+            {
+                var parameter = _parametersList
+                    .FirstOrDefault(x => x.FullName == p.Key || x.ShortName == p.Key);
+                Execute(parameter.Type, p.Value);
+                if (parameter.Type == Keys.Help)
+                {
+                    return;
+                }
+            }
+        }
+
+        private static void Execute(Keys key, string parameter)
+        {
+            switch (key)
+            {
+                case Keys.Help:
+                    Help();
+                    break;
+                case Keys.Password:
+                    Console.WriteLine("password");
+                    break;
+                case Keys.Version:
+                    Version();
+                    break;                
+            }
         }
 
         private static string GetValue(string param)
@@ -54,11 +86,11 @@ namespace Mentorship
             {
                 return false;
             }
-
             return parameters.Keys
                .All(i => _parametersList
                        .Any(y => y.FullName == i || y.ShortName == i));
         }
+
         private static void Help()
         {
             var files = File.ReadAllText(@"C:\Users\mariana.novosad\source\repos\Mentorship\help.txt");
@@ -78,33 +110,12 @@ namespace Mentorship
             return;
         }
 
-        private static void Call(string[] args)
-        {
-            if (args.Length > 0 && args[0] == "-s" && args[2] == "-d" && args[4] == "-f")
-            {
-                Move(args);
-            }
-            else if (args.Length == 0 || args[0] == "-h")
-            {
-                Help();
-            }
-            else if (args.Length == 0 || args[0] == "-v")
-            {
-                Version(args);
-            }
-            else
-            {
-                Console.WriteLine("shit");
-            }
-        }
-
-        private static void Version(string[] args)
+        private static void Version()
         {
             string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             Console.WriteLine("version: " + version);
             return;
         }
-
-
     }
 }
+
