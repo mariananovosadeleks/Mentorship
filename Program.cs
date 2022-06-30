@@ -5,112 +5,99 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-
+using Mentorship.Models;
+using Mentorship.Models.Enums;
 
 namespace Mentorship
 {
     class Program
     {
+        private static List<Parameter> _parametersList = new List<Parameter>()
+        {
+           new Parameter(Keys.Help, "h", "help"),
+           new Parameter(Keys.IpDomainPort),
+           new Parameter(Keys.FileName, "f", "file"),
+           new Parameter(Keys.Output, "o", "output"),
+           new Parameter(Keys.Password,"p", "password"),
+           new Parameter(Keys.User, "u", "user"),
+           new Parameter(Keys.Version, "v", "version")
+        };
+
         static void Main(string[] args)
         {
+            //Call(args);
+            //only for testing
+            //var fakeArg = @"-help -s C:\Users\mariana.novosad\source\repos\Mentorship\source -d C:\Users\mariana.novosad\source\repos\Mentorship\destination -f test.txt";
+            var fakeArg = @"--help -p C:\Users\mariana.novosad\source\repos\Mentorship\source -o C:\Users\mariana.novosad\source\repos\Mentorship\destination -u test.txt";
 
-            Call(args);
-
-            //Get parameters string
-            var arg = @"-help -s C:\Users\mariana.novosad\source\repos\Mentorship\source -d C:\Users\mariana.novosad\source\repos\Mentorship\destination -f test.txt";
-            //string[] parameters = String.Join(" ", args).Split("-");
-
-            //Func<string, string> someFunctionDelegate = parameter => parameter + "1";
-            var parameters = arg.Split("-");
-            var param1 = parameters.Where(HasValue).Select(Method);
-
-            var param = param1.ToDictionary(GetKey, GetValue);
-
-
-
-            //someFunctionDelegate.Invoke("text");
-            
-
-            Console.WriteLine("PARAMETERS:" + parameters);
-        }
-
-        public static bool HasValue(string keyValueStr)
-        {
-           
-
-            return !String.IsNullOrWhiteSpace(keyValueStr);
-        }
-
-        public static string GetKey(KeyValuePair<string,string> pair)
-        {
-            return pair.Key;
-        }
-
-        public static string GetValue(KeyValuePair<string, string> pair)
-        {
-            return pair.Value;
-        }
-
-        public static KeyValuePair<string, string> Method(string parameter)
-        {
-            var value = string.Empty;
-            var arr = parameter.Split(" ");
-            var key = arr[0];
-            if(arr.Length > 1)
+            var fakeParameters = fakeArg.Split("-")
+                .Where(x => !String.IsNullOrWhiteSpace(x))
+                .ToDictionary((x => x.Split(" ")[0]), GetValue);
+            //true data
+            var parameters = string.Join(" ", args)
+                .Split("-")
+                .Where(x => !String.IsNullOrWhiteSpace(x))
+                .ToDictionary((x => x.Split(" ")[0]), GetValue);
+            if (!IsValid(fakeParameters))
             {
-                value = arr[1];
+                Help();
+                return;
             }
 
-            var keyValue = new KeyValuePair<string, string>(key, value);
-
-            return keyValue;
-        }
-
-        private static readonly Dictionary<string, Action<string[]>> commandMap = new Dictionary<string, Action<string[]>>(StringComparer.InvariantCultureIgnoreCase)
-        {
-            [nameof(Help)] = Help,
-            [nameof(Key)] = Key,
-            [nameof(Decrypt)] = Decrypt,
-            [nameof(SkipFormat)] = SkipFormat,
-            [nameof(Version)] = Version,
-            [nameof(Move)] = Move
-
-        };//шоб шо
-
-
-
-        public void  Parse (string[] args)
-        {
-            Dictionary<string, string> parsedParameters = new Dictionary<string, string>();
-            //string flag = "-";
-
-            //for(int i = 0; i < args.Length; i++)
-            //{
-            //    if (args[i] == null) continue;
-
-            //    string key = "";
-            //    string value = "";
-
-
-            //}
-
-
-
-
-        }
-
-
-         static void Help(string[] args)
-         {
-            var files = File.ReadLines(@"C:\Users\mariana.novosad\source\repos\Mentorship\help.txt");
-            foreach(var f in files)
+            foreach (var p in fakeParameters)
             {
-                Console.WriteLine(f);
+                var parameter = _parametersList
+                    .FirstOrDefault(x => x.FullName == p.Key || x.ShortName == p.Key);
+                Execute(parameter.Type, p.Value);
+                if (parameter.Type == Keys.Help)
+                {
+                    return;
+                }
             }
-            return;
         }
 
-        static void Move(string[] args)
+        private static void Execute(Keys key, string parameter)
+        {
+            switch (key)
+            {
+                case Keys.Help:
+                    Help();
+                    break;
+                case Keys.Password:
+                    Console.WriteLine("password");
+                    break;
+                case Keys.Version:
+                    Version();
+                    break;                
+            }
+        }
+
+        private static string GetValue(string param)
+        {
+            var array = param.Split(" ");
+            var value = array.Length > 1 ? array[1] : string.Empty;
+            return value;
+        }
+
+        private static bool IsValid(Dictionary<string, string> parameters)
+        {
+
+            if (parameters == null)
+            {
+                return false;
+            }
+            return parameters.Keys
+               .All(i => _parametersList
+                       .Any(y => y.FullName == i || y.ShortName == i));
+        }
+
+        private static void Help()
+        {
+            var files = File.ReadAllText(@"C:\Users\mariana.novosad\source\repos\Mentorship\help.txt");
+            Console.WriteLine(files);
+        }
+
+        private static void Move(string[] args)
         {
             string source = args[1];
             string destination = args[3];
@@ -123,42 +110,7 @@ namespace Mentorship
             return;
         }
 
-        static void Call(string[] args)
-        {
-            if (args.Length > 0 && args[0] == "-s" && args[2] == "-d" && args[4] == "-f")
-            {
-                Move(args);
-            }
-            else if (args.Length == 0 || args[0] == "-h")
-            {
-                Help(args);
-            }
-            else if (args.Length == 0 || args[0] == "-v")
-            {
-                Version(args);
-            }
-            else 
-            {
-                Console.WriteLine("shit");
-            }
-        }
-
-        static void Key(string[] args)
-        {
-
-        }
-
-        static void Decrypt(string[] args)
-        {
-
-        }
-
-        static void SkipFormat(string[] args)
-        {
-
-        }
-
-        static void Version(string[] args)
+        private static void Version()
         {
             string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             Console.WriteLine("version: " + version);
@@ -166,3 +118,4 @@ namespace Mentorship
         }
     }
 }
+
