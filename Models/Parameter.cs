@@ -7,9 +7,9 @@ namespace Mentorship.Models
 {
     class Parameter
     {
-        private string ShortName { get; set; }
-        private string FullName { get; set; }
-        private Keys Type { get; set; }
+        public string ShortName { get; set; }
+        public string FullName { get; set; }
+        public Keys Type { get; set; }
 
         public Parameter(Keys type,  string shortName = "", string fullName = "")
         {
