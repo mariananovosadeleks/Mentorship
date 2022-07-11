@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Mentorship.Models.Enums
+﻿namespace Mentorship.Models.Enums
 {
     public enum Keys
     {

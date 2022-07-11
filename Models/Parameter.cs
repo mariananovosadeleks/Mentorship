@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Mentorship.Models.Enums;
+﻿using Mentorship.Models.Enums;
 
 namespace Mentorship.Models
 {
